@@ -1,4 +1,4 @@
-name: Build LunaTV armv7a
+name: Build LunaTV multi-arch
 
 on:
   workflow_dispatch:   # 手动触发
@@ -26,11 +26,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push ARMv7 image
+      - name: Build and Push multi-arch image
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
-          platforms: linux/arm/v7
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/lunatv:armv7
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/lunatv:latest
+            ghcr.io/${{ github.repository_owner }}/lunatv:${{ github.sha }}
+`
