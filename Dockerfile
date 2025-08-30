@@ -1,5 +1,5 @@
-# ---- 构建阶段 (强制 amd64/arm64 编译 swc) ----
-FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
+# ---- 构建阶段 (固定用 amd64 编译 swc) ----
+FROM --platform=linux/amd64 node:20-alpine AS builder
 RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY . .
 ENV DOCKER_ENV=true
 RUN pnpm run build
 
-# ---- 运行阶段 (针对不同平台生成不同 runtime) ----
+# ---- 运行阶段 (各平台对应运行时) ----
 FROM node:18-bullseye AS runner
 RUN addgroup --system nodejs && adduser --system --ingroup nodejs nextjs
 
